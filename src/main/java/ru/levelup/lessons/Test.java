@@ -1,5 +1,6 @@
 package ru.levelup.lessons;
 
+import javax.persistence.Entity;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -7,18 +8,23 @@ import java.util.List;
 
 public class Test {
 
-
-    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, IllegalAnnotationException {
         String packageName = "ru.levelup.lessons";
         List<Class> foundClasses = classFinder(packageName);
 
         for (int i = 0; i < foundClasses.size(); i++) {
-            System.out.println(foundClasses.get(i).getDeclaredConstructor().newInstance());
+            if (foundClasses.get(i).isAnnotationPresent(Entity.class)) {
+                Object object = (foundClasses.get(i).getDeclaredConstructor().newInstance());
+                RandomIntAnnotationProcessor.process(object);
+                System.out.println(object);
+            }
+            else
+                i++;
         }
 
     }
 
-    public static List<Class> classFinder (String packageName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+    public static List<Class> classFinder(String packageName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
 
         //получение адреса пакета в корректном формате
         String updatedPackageName = packageName.replace(".", "\\");
@@ -45,13 +51,9 @@ public class Test {
     public static String removeDotJavaFromClassName(String classNameWithDotJava) {
         String dotJava = ".java";
         StringBuffer stringBuffer = new StringBuffer(classNameWithDotJava);
-        stringBuffer.delete(classNameWithDotJava.length() - dotJava.length(),classNameWithDotJava.length());
+        stringBuffer.delete(classNameWithDotJava.length() - dotJava.length(), classNameWithDotJava.length());
         String shortName = stringBuffer.toString();
         return shortName;
     }
 
-    @Override
-    public String toString() {
-        return "Hello from Test class";
-    }
 }

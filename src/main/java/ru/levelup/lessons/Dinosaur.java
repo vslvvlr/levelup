@@ -1,8 +1,14 @@
 package ru.levelup.lessons;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Dinosaur {
-    public String sound;
-    public int size;
+    @RandomInt
+    private String sound;
+    private int size;
+    @RandomInt
+    private int amount;
 
     public Dinosaur() {
         this.sound = "ROAAAAAARRRR";
@@ -14,6 +20,7 @@ public class Dinosaur {
         return "Dinosaur{" +
                 "sound='" + sound + '\'' +
                 ", size=" + size +
+                ", amount=" + amount +
                 '}';
     }
 }
